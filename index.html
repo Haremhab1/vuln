@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerability Scanner</title>
+</head>
+<body>
+    <input type="text" id="urlInput" placeholder="Enter URL" />
+    <button onclick="scanVulnerabilities()">Scan</button>
+    
+    <script>
+        function scanVulnerabilities() {
+            const url = document.getElementById("urlInput").value;
+            
+            fetch(url)
+                .then(response => {
+                    const cookies = document.cookie;
+                    if (cookies) {
+                        cookies.split(";").forEach(cookie => {
+                            if (cookie.toLowerCase().includes("session")) {
+                                console.log(`Session Cookie found: ${cookie}`);
+                            }
+                        });
+                    }
+
+                    response.text().then(text => {
+                        if (text.includes("404")) {
+                            console.log("Possible 404 Vulnerability: Page not found.");
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error(`Error: ${error}`);
+                });
+        }
+    </script>
+</body>
+</html>
